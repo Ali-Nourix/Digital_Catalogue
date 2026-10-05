@@ -230,9 +230,16 @@ function lead(p) {
   return p.photos.find((ph) => ph.kind === "main" || ph.kind === "listing") || p.photos[0] || null;
 }
 
-function collator(lang) {
-  const c = new Intl.Collator(lang === "fa" ? "fa" : "en", { sensitivity: "base" });
-  return (a, b) => c.compare(a.name[lang], b.name[lang]);
+/** A stone's name is the Latin one in both languages, as the trade writes it.
+    The Persian names stay in the research and in the search, so a reader who
+    types one still finds the stone, but they are not shown. */
+function nameOf(p) {
+  return plain(p.name.en);
+}
+
+function collator() {
+  const c = new Intl.Collator("en", { sensitivity: "base" });
+  return (a, b) => c.compare(a.name.en, b.name.en);
 }
 
 /* ---------------------------------------------------------------- where */
@@ -440,7 +447,7 @@ function tile(page, p, { eager = false, feature = false } = {}) {
               ${picture}
             </span>
             <span class="stone__text reveal" style="--i:1">
-              <span class="stone__name">${esc(plain(p.name[lang]))}</span>
+              <span class="stone__name">${esc(nameOf(p))}</span>
               <span class="stone__meta">${esc(meta.join(lang === "fa" ? "، " : ", "))}</span>
             </span>
           </a>
@@ -478,7 +485,7 @@ function hero(page) {
   const slides = BAND.map((p) => ({
     srcset: srcset(page.prefix, p.surface),
     src: largest(page.prefix, p.surface),
-    name: plain(p.name[lang]),
+    name: nameOf(p),
     href: links.product(p.slug),
   }));
   const first = BAND[0].surface;
@@ -650,7 +657,7 @@ function product(mode, lang, p) {
   const base = `${baseOf(mode, lang)}product/${p.slug}/`;
   const page = { mode, lang, prefix: upTo(base) };
   const t = T[lang];
-  const name = plain(p.name[lang]);
+  const name = nameOf(p);
   const kind = typeOf(p);
   const links = site(page);
   const wide = mode === "wide";

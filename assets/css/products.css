@@ -2263,3 +2263,21 @@ html[lang="en"] .about__heading {
     transition: none;
   }
 }
+
+/* A stone's name is the Latin one in both languages, so on the Persian pages
+   it is set the way the English ones are: the brand's Latin face, at its
+   weight, and not in the Persian face's weight and spacing. */
+html[lang="fa"] .stone__name,
+html[lang="fa"] .hero__title,
+html[lang="fa"] .card__name {
+  font-family: var(--font-en);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+
+  /* Latin words in a right to left line, set one to a span for the word by
+     word reveal, would be laid out right to left: "Purple Rain" would read
+     "Rain Purple". The name runs left to right and sits at the line's start. */
+  direction: ltr;
+  unicode-bidi: isolate;
+  text-align: right;
+}
